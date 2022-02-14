@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "2879026876",
+    "project_id": "plasma-ba43b",
+    "storage_bucket": "plasma-ba43b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2879026876:android:53efbab252482d547282b9",
+        "android_client_info": {
+          "package_name": "com.aam.plasma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2879026876-m1kv1qv7lekndah4vgku6va33lekpoo2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5GbkJ2u4zPVgb1E10qalXjR2pXyZT2qY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2879026876-m1kv1qv7lekndah4vgku6va33lekpoo2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
