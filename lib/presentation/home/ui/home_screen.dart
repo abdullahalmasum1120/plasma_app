@@ -50,12 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     curve: Curves.fastOutSlowIn,
                   );
                 },
-                child: Text(
-                  "Donation Requests",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                child: const Text("Donation Requests"),
               ),
-              backgroundColor: Colors.white,
             ),
             const BloodRequests(),
           ],

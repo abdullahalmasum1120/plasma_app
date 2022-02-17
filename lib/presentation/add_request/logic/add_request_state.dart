@@ -19,10 +19,10 @@ class RequestAddedState extends AddRequestState {
   List<Object> get props => [];
 }
 
-class ExceptionState extends AddRequestState {
+class RequestExceptionState extends AddRequestState {
   final String message;
 
-  ExceptionState({required this.message});
+  const RequestExceptionState({required this.message});
 
   @override
   List<Object> get props => [message];

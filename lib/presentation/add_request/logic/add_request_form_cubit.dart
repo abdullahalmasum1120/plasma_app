@@ -17,12 +17,14 @@ class AddRequestFormCubit extends Cubit<AddRequestFormState> {
       if (hospital.validate) {
         emit(state.copyWith(
           hospital: hospital.name,
+          hasHospitalError: false,
           hospitalErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         hospital: hospital.name,
+        hasHospitalError: true,
         hospitalErrorMessage: e.message,
       ));
     }
@@ -33,12 +35,14 @@ class AddRequestFormCubit extends Cubit<AddRequestFormState> {
       if (city.validate) {
         emit(state.copyWith(
           city: city.city,
+          hasCityError: false,
           cityErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         city: city.city,
+        hasCityError: true,
         cityErrorMessage: e.message,
       ));
     }
@@ -49,12 +53,14 @@ class AddRequestFormCubit extends Cubit<AddRequestFormState> {
       if (thana.validate) {
         emit(state.copyWith(
           thana: thana.thana,
+          hasThanaError: false,
           thanaErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         thana: thana.thana,
+        hasThanaError: true,
         thanaErrorMessage: e.message,
       ));
     }
@@ -65,12 +71,14 @@ class AddRequestFormCubit extends Cubit<AddRequestFormState> {
       if (bloodGroup.validate) {
         emit(state.copyWith(
           bloodGroup: bloodGroup.group,
+          hasBloodGroupError: false,
           bloodGroupErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         bloodGroup: bloodGroup.group,
+        hasBloodGroupError: true,
         bloodGroupErrorMessage: e.message,
       ));
     }
@@ -81,12 +89,14 @@ class AddRequestFormCubit extends Cubit<AddRequestFormState> {
       if (note.validate) {
         emit(state.copyWith(
           note: note.note,
+          hasNoteError: false,
           noteErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         note: note.note,
+        hasNoteError: true,
         noteErrorMessage: e.message,
       ));
     }

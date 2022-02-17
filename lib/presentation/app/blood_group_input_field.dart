@@ -18,6 +18,7 @@ class BloodGroupInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
+        contentPadding: const EdgeInsets.only(right: 12.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
           borderSide: BorderSide(color: Theme.of(context).primaryColor),

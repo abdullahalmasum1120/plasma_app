@@ -26,6 +26,7 @@ class GridMenuItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Badge(
+          badgeColor: Theme.of(context).primaryColor,
           shape: BadgeShape.circle,
           position: const BadgePosition(
             top: -4,
@@ -35,8 +36,7 @@ class GridMenuItem extends StatelessWidget {
             badgeText,
             style: Theme.of(context)
                 .textTheme
-                .bodySmall!
-                .copyWith(color: Theme.of(context).scaffoldBackgroundColor),
+                .bodySmall,
           ),
           showBadge: badgeText.isNotEmpty,
           child: Container(
@@ -46,14 +46,13 @@ class GridMenuItem extends StatelessWidget {
                 Expanded(
                   child: SvgPicture.asset(
                     iconSrc,
-                    height: 32,
-                    width: 32,
+                    height: 28,
+                    width: 28,
                   ),
                 ),
                 Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),

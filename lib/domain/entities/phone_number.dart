@@ -12,10 +12,10 @@ class PhoneNumber extends Equatable {
 
   bool get validate {
     if (phone.isNotEmpty) {
-      if (phone.length == 14) {
+      if (RegExp(r'^01[13-9]\d{8}$').hasMatch(phone)) {
         return true;
       } else {
-        throw ValueException(message: "Length must be 10 without Country-code");
+        throw ValueException(message: "Invalid Phone number");
       }
     } else {
       throw ValueException(message: "* Required");

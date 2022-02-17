@@ -20,7 +20,7 @@ class AuthRepo extends IAuth {
   }) async {
     await _firebaseAuth.verifyPhoneNumber(
       timeout: duration,
-      phoneNumber: phoneNumber.phone,
+      phoneNumber: "+88${phoneNumber.phone}",
       verificationCompleted: phoneVerificationCompleted,
       verificationFailed: phoneVerificationFailed,
       codeSent: phoneCodeSent,

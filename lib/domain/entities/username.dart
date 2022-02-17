@@ -13,7 +13,7 @@ class Username extends Equatable {
       if (name.length > 3) {
         return true;
       } else {
-        throw ValueException(message: "Length must be greater then 3");
+        throw ValueException(message: "Username must be greater then 3");
       }
     } else {
       throw ValueException(message: "* Required");

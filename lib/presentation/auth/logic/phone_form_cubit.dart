@@ -13,12 +13,14 @@ class PhoneFormCubit extends Cubit<PhoneFormState> {
       if (phoneNumber.validate) {
         emit(state.copyWith(
           phoneNumber: phoneNumber,
+          hasError: false,
           errorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         phoneNumber: phoneNumber,
+        hasError: true,
         errorMessage: e.message,
       ));
     }

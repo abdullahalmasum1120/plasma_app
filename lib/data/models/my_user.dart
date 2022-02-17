@@ -9,6 +9,7 @@ class MyUser {
   String? image;
   String? requested;
   String? donated;
+  bool? isAvailable;
 
   MyUser({
     this.username,
@@ -21,6 +22,7 @@ class MyUser {
     this.image,
     this.requested,
     this.donated,
+    this.isAvailable,
   });
 
   MyUser.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class MyUser {
     image = json['image'];
     requested = json['requested'];
     donated = json['donated'];
+    isAvailable = json["isAvailable"];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +51,7 @@ class MyUser {
     data['image'] = image;
     data['requested'] = requested;
     data['donated'] = donated;
+    data['isAvailable'] = isAvailable;
     return data;
   }
 }

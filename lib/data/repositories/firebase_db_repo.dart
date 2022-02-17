@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:plasma/data/models/blood_request.dart';
 import 'package:plasma/data/models/featured_image.dart';
 import 'package:plasma/data/models/my_user.dart';
@@ -213,5 +215,13 @@ class FirebaseDBRepo extends IFirestoreDB {
       }
       return bloodRequests;
     });
+  }
+  ///uploading files into fireStorage
+  @override
+  UploadTask uploadFile({
+    required Reference reference,
+    required File file,
+  }) {
+    return reference.putFile(file);
   }
 }

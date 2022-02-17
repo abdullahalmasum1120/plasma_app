@@ -12,15 +12,11 @@ import 'package:plasma/presentation/app/filled_Button.dart';
 import 'package:plasma/presentation/add_request/logic/add_request_cubit.dart';
 import 'package:plasma/presentation/add_request/logic/add_request_form_cubit.dart';
 import 'package:plasma/presentation/app/input_field.dart';
+import 'package:plasma/presentation/app/loading_dialog.dart';
 
-class AddRequestScreen extends StatefulWidget {
+class AddRequestScreen extends StatelessWidget {
   const AddRequestScreen({Key? key}) : super(key: key);
 
-  @override
-  _AddRequestScreenState createState() => _AddRequestScreenState();
-}
-
-class _AddRequestScreenState extends State<AddRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -34,7 +30,19 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
       ],
       child: BlocListener<AddRequestCubit, AddRequestState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is AddingRequestState) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const LoadingDialog(),
+            );
+          }
+          if (state is RequestAddedState) {
+            //TODO: show snackBar():
+          }
+          if (state is RequestExceptionState) {
+            //TODO: show snackBar():
+          }
         },
         child: Scaffold(
           body: SafeArea(
@@ -69,7 +77,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                   builder: (context, state) {
                     return InputField(
                       textInputType: TextInputType.text,
-                      icon: Icons.local_hospital_outlined,
+                      prefixIcon: Icons.local_hospital_outlined,
                       label: "Hospital Name",
                       onChanged: (String value) => context
                           .read<AddRequestFormCubit>()
@@ -85,7 +93,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                   builder: (context, state) {
                     return InputField(
                       textInputType: TextInputType.text,
-                      icon: Icons.location_city_outlined,
+                      prefixIcon: Icons.location_city_outlined,
                       label: "City",
                       onChanged: (String value) => context
                           .read<AddRequestFormCubit>()
@@ -101,7 +109,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                   builder: (context, state) {
                     return InputField(
                       textInputType: TextInputType.text,
-                      icon: Icons.location_on_outlined,
+                      prefixIcon: Icons.location_on_outlined,
                       label: "Thana",
                       onChanged: (String value) => context
                           .read<AddRequestFormCubit>()
@@ -132,7 +140,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                   builder: (context, state) {
                     return InputField(
                       textInputType: TextInputType.text,
-                      icon: Icons.note_add_outlined,
+                      prefixIcon: Icons.note_add_outlined,
                       label: "Note (Optional)",
                       onChanged: (String value) => context
                           .read<AddRequestFormCubit>()
@@ -146,6 +154,11 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                 ),
                 BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
                   builder: (context, state) {
+                    bool isValidForm = state.noteErrorMessage == null &&
+                        state.bloodGroupErrorMessage == null &&
+                        state.thanaErrorMessage == null &&
+                        state.cityErrorMessage == null &&
+                        state.hospitalErrorMessage == null;
                     return MyFilledButton(
                       child: Text(
                         "Post Request",
@@ -153,11 +166,7 @@ class _AddRequestScreenState extends State<AddRequestScreen> {
                       ),
                       size: const Size(0, 0),
                       onTap: () {
-                        if (state.noteErrorMessage == null &&
-                            state.bloodGroupErrorMessage == null &&
-                            state.thanaErrorMessage == null &&
-                            state.cityErrorMessage == null &&
-                            state.hospitalErrorMessage == null) {
+                        if (isValidForm) {
                           BloodRequest request = BloodRequest(
                             hospital: state.hospital,
                             city: state.city,

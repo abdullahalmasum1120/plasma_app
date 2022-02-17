@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:plasma/data/models/blood_request.dart';
 import 'package:plasma/data/models/featured_image.dart';
 import 'package:plasma/data/models/my_user.dart';
+
 ///all collections of Firestore
 class Collections {
   static const String users = "users";
@@ -49,4 +53,11 @@ abstract class IFirestoreDB {
   Stream<List<FeatureImage>> featureImageStream();
 
   Future<bool> deleteFeatureImage({required String id});
+
+  ///uploading files into fireStorage
+
+  UploadTask uploadFile({
+    required Reference reference,
+    required File file,
+  });
 }

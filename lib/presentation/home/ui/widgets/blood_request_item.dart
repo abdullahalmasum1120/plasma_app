@@ -14,14 +14,12 @@ class BloodRequestItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.zero,
       elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Container(
-        padding: const EdgeInsets.all(10),
-        color: Colors.white,
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Expanded(
@@ -96,7 +94,7 @@ class BloodRequestItem extends StatelessWidget {
                         left: 10,
                         child: Text(
                           request.bloodGroup ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
                         ),
                       ),
                     ],
