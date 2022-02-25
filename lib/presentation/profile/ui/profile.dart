@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:plasma/core/blocs/upload_bloc.dart';
 import 'package:plasma/domain/interfaces/i_firestore_db.dart';
+import 'package:plasma/presentation/app/alert_dialog.dart';
 import 'package:plasma/presentation/profile/logic/user_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,7 +45,6 @@ class Profile extends StatelessWidget {
             const SizedBox(
               height: 48.0,
             ),
-            //TODO: solve UI problem updating
             Container(
               alignment: Alignment.center,
               child: Stack(
@@ -456,9 +456,11 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
+            //TODO: disable signout
             const SizedBox(
               height: 8.0,
             ),
+
             Card(
               elevation: 3,
               child: Container(
@@ -473,50 +475,11 @@ class Profile extends StatelessWidget {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            title: Row(
-                              children: const [
-                                Icon(
-                                  Icons.warning,
-                                  color: Colors.amber,
-                                ),
-                                SizedBox(
-                                  width: 8.0,
-                                ),
-                                Text("Warning!"),
-                              ],
-                            ),
-                            content: const Text("Do you want to Sign out?"),
-                            actions: [
-                              GestureDetector(
-                                onTap: () {
-                                  FirebaseAuth.instance.signOut();
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Sign out",
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Cancel",
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                          return MyAlertDialog(
+                              content: const Text("Do you want to Sign out?"),
+                              onPositive: () {
+                                FirebaseAuth.instance.signOut();
+                              });
                         });
                   },
                   child: Row(
@@ -535,7 +498,8 @@ class Profile extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            //TODO: disable signout
           ],
         ),
       ),

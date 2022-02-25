@@ -2,62 +2,62 @@ part of 'update_user_form_cubit.dart';
 
 class UpdateUserDataFormState extends Equatable {
   final String city;
-  final bool hasCityError;
+  final bool isValidCity;
   final String? cityErrorMessage;
   final String thana;
-  final bool hasThanaError;
+  final bool isValidThana;
   final String? thanaErrorMessage;
   final String username;
-  final bool hasUsernameError;
+  final bool isValidName;
   final String? usernameErrorMessage;
   final String bloodGroup;
-  final bool hasBloodGroupError;
+  final bool isValidBloodGroup;
   final String? bloodGroupErrorMessage;
 
   const UpdateUserDataFormState._({
     required this.city,
-    required this.hasCityError,
+    required this.isValidCity,
     required this.cityErrorMessage,
     required this.thana,
-    required this.hasThanaError,
+    required this.isValidThana,
     required this.thanaErrorMessage,
     required this.username,
-    required this.hasUsernameError,
+    required this.isValidName,
     required this.usernameErrorMessage,
     required this.bloodGroup,
-    required this.hasBloodGroupError,
+    required this.isValidBloodGroup,
     required this.bloodGroupErrorMessage,
   });
 
   factory UpdateUserDataFormState.initial() {
     return const UpdateUserDataFormState._(
       city: "",
-      hasCityError: false,
+      isValidCity: false,
       cityErrorMessage: null,
       thana: "",
-      hasThanaError: false,
+      isValidThana: false,
       thanaErrorMessage: null,
       username: "",
-      hasUsernameError: false,
+      isValidName: false,
       usernameErrorMessage: null,
       bloodGroup: "",
-      hasBloodGroupError: false,
+      isValidBloodGroup: false,
       bloodGroupErrorMessage: null,
     );
   }
 
   UpdateUserDataFormState copyWith({
     String? city,
-    bool? hasCityError,
+    bool? isValidCity,
     String? cityErrorMessage,
     String? thana,
-    bool? hasThanaError,
+    bool? isValidThana,
     String? thanaErrorMessage,
     String? username,
-    bool? hasUsernameError,
+    bool? isValidName,
     String? usernameErrorMessage,
     String? bloodGroup,
-    bool? hasBloodGroupError,
+    bool? isValidBloodGroup,
     String? bloodGroupErrorMessage,
   }) {
     return UpdateUserDataFormState._(
@@ -70,10 +70,10 @@ class UpdateUserDataFormState extends Equatable {
       bloodGroup: bloodGroup ?? this.bloodGroup,
       bloodGroupErrorMessage:
           bloodGroupErrorMessage ?? this.bloodGroupErrorMessage,
-      hasBloodGroupError: hasBloodGroupError ?? this.hasBloodGroupError,
-      hasUsernameError: hasUsernameError ?? this.hasUsernameError,
-      hasCityError: hasCityError ?? this.hasCityError,
-      hasThanaError: hasThanaError ?? this.hasThanaError,
+      isValidBloodGroup: isValidBloodGroup ?? this.isValidBloodGroup,
+      isValidName: isValidName ?? this.isValidName,
+      isValidCity: isValidCity ?? this.isValidCity,
+      isValidThana: isValidThana ?? this.isValidThana,
     );
   }
 
@@ -87,9 +87,9 @@ class UpdateUserDataFormState extends Equatable {
         username,
         bloodGroupErrorMessage,
         bloodGroup,
-        hasUsernameError,
-        hasCityError,
-        hasThanaError,
-        hasBloodGroupError,
+        isValidName,
+        isValidCity,
+        isValidThana,
+        isValidBloodGroup,
       ];
 }

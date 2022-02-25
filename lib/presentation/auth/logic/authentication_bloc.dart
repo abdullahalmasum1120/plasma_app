@@ -13,6 +13,8 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
+  int? forceResendingToken;
+  String verificationId = "";
   final AuthRepo _authRepo = AuthRepo();
 
   AuthenticationBloc() : super(AuthInitialState()) {
@@ -24,15 +26,11 @@ class AuthenticationBloc
       emit(OtpSendingState());
     });
     on<AuthExceptionEvent>((event, emit) {
-      emit(AuthExceptionState(event.message));
+      emit(AuthExceptionState(message: event.message));
     });
 
     on<OtpSentEvent>((event, emit) {
-      emit(OtpSentState(event.verificationId, event.forceResendingToken));
-    });
-
-    on<OtpTimeOutEvent>((event, emit) {
-      emit(OtpTimeOutState(event.verificationId));
+      emit(OtpSentState());
     });
     on<AuthInitialEvent>((event, emit) {
       emit(AuthInitialState());
@@ -40,15 +38,21 @@ class AuthenticationBloc
     on<OtpVerifiedEvent>((event, emit) {
       emit(OtpVerifiedState(userCredential: event.userCredential));
     });
+    on<OtpExceptionEvent>((event, emit) {
+      emit(OtpExceptionState(message: event.message));
+    });
     on<SendOtpEvent>((event, emit) async {
-      await _sendOtp(phoneNumber: event.phoneNumber);
+      await _sendOtp(
+        phoneNumber: event.phoneNumber,
+        forceResendingToken: forceResendingToken,
+      );
     });
     on<VerifyOtpEvent>((event, emit) async {
+      PhoneAuthCredential _phoneAuthCredential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: event.otpCode.code);
       await _signIn(
-        authCredential: PhoneAuthProvider.credential(
-          verificationId: event.verificationId,
-          smsCode: event.otpCode.code,
-        ),
+        authCredential: _phoneAuthCredential,
+        verificationId: verificationId,
       );
     });
   }
@@ -63,30 +67,41 @@ class AuthenticationBloc
       phoneNumber: phoneNumber,
       phoneVerificationCompleted:
           (PhoneAuthCredential phoneAuthCredential) async {
-        await _signIn(authCredential: phoneAuthCredential);
+        add(OtpVerifyingEvent());
+
+        add(OtpVerifiedEvent(
+          userCredential:
+              await _authRepo.signIn(authCredential: phoneAuthCredential),
+        ));
       },
       phoneCodeAutoRetrievalTimeout: (String verificationId) {
-        add(OtpTimeOutEvent(verificationId));
+        if (!isClosed) {
+          add(const AuthExceptionEvent(message: "Otp Code Expired"));
+        }
       },
       phoneVerificationFailed: (FirebaseAuthException firebaseAuthException) {
-        add(AuthExceptionEvent("${firebaseAuthException.message}"));
+        add(AuthExceptionEvent(message: firebaseAuthException.code));
       },
       phoneCodeSent: (String verificationId, int? forceResendingToken) {
-        add(OtpSentEvent(verificationId, forceResendingToken));
+        this.forceResendingToken = forceResendingToken;
+        this.verificationId = verificationId;
+        add(OtpSentEvent());
       },
     );
   }
 
-  Future<void> _signIn({required AuthCredential authCredential}) async {
+  Future<void> _signIn({
+    required AuthCredential authCredential,
+    required String verificationId,
+  }) async {
     add(OtpVerifyingEvent());
     try {
       UserCredential userCredential =
           await _authRepo.signIn(authCredential: authCredential);
-      if (userCredential.user != null) {
-        add(OtpVerifiedEvent(userCredential: userCredential));
-      }
+
+      add(OtpVerifiedEvent(userCredential: userCredential));
     } on AuthException catch (e) {
-      add(AuthExceptionEvent(e.message));
+      add(OtpExceptionEvent(message: e.message));
     }
   }
 }

@@ -11,9 +11,13 @@ class Username extends Equatable {
   bool get validate {
     if (name.isNotEmpty) {
       if (name.length > 3) {
-        return true;
+        if (RegExp(r'^[A-Z a-z]+$').hasMatch(name)) {
+          return true;
+        } else {
+          throw ValueException(message: "Invalid Username(Use only alphabetic letters)");
+        }
       } else {
-        throw ValueException(message: "Username must be greater then 3");
+        throw ValueException(message: "Username is too short");
       }
     } else {
       throw ValueException(message: "* Required");

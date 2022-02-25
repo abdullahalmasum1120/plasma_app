@@ -16,14 +16,14 @@ class UpdateUserDataFormCubit extends Cubit<UpdateUserDataFormState> {
       if (username.validate) {
         emit(state.copyWith(
           username: username.name,
-          hasUsernameError: false,
+          isValidName: true,
           usernameErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         username: username.name,
-        hasUsernameError: true,
+        isValidName: false,
         usernameErrorMessage: e.message,
       ));
     }
@@ -34,14 +34,14 @@ class UpdateUserDataFormCubit extends Cubit<UpdateUserDataFormState> {
       if (city.validate) {
         emit(state.copyWith(
           city: city.city,
-          hasCityError: false,
+          isValidCity: true,
           cityErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         city: city.city,
-        hasCityError: true,
+        isValidCity: false,
         cityErrorMessage: e.message,
       ));
     }
@@ -52,14 +52,14 @@ class UpdateUserDataFormCubit extends Cubit<UpdateUserDataFormState> {
       if (thana.validate) {
         emit(state.copyWith(
           thana: thana.thana,
-          hasThanaError: false,
+          isValidThana: true,
           thanaErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         thana: thana.thana,
-        hasThanaError: true,
+        isValidThana: false,
         thanaErrorMessage: e.message,
       ));
     }
@@ -70,14 +70,14 @@ class UpdateUserDataFormCubit extends Cubit<UpdateUserDataFormState> {
       if (bloodGroup.validate) {
         emit(state.copyWith(
           bloodGroup: bloodGroup.group,
-          hasBloodGroupError: false,
+          isValidBloodGroup: true,
           bloodGroupErrorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         bloodGroup: bloodGroup.group,
-        hasBloodGroupError: true,
+        isValidBloodGroup: false,
         bloodGroupErrorMessage: e.message,
       ));
     }

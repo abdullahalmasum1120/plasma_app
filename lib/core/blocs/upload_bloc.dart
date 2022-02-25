@@ -22,13 +22,7 @@ class UploadBloc extends Bloc<UploadInitialEvent, UploadState> {
       UploadTask _uploadTask = _firebaseDBRepo.uploadFile(
         file: event.file,
         reference: event.storageReference,
-      );
-      _uploadTask.whenComplete(() async {
-        String url = await event.storageReference.getDownloadURL();
-        event.documentReference?.update({event.fieldName!: url});
-        add(UploadedEvent(downloadUrl: url));
-      });
-      _streamSubscription = _uploadTask.snapshotEvents.listen((taskSnapshot) {
+      );_streamSubscription = _uploadTask.snapshotEvents.listen((taskSnapshot) {
         double progress =
             (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
         AwesomeNotifications().createNotification(
@@ -46,6 +40,12 @@ class UploadBloc extends Bloc<UploadInitialEvent, UploadState> {
         );
         add(UploadingEvent(progress));
       });
+      _uploadTask.whenComplete(() async {
+        String url = await event.storageReference.getDownloadURL();
+        event.documentReference?.update({event.fieldName!: url});
+        add(UploadedEvent(downloadUrl: url));
+      });
+
       on<UploadingEvent>((event, emit) {
         emit(UploadingState(event.progress.ceilToDouble()));
       });

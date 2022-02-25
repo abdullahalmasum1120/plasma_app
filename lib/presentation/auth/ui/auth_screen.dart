@@ -1,14 +1,14 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:plasma/domain/entities/otp_code.dart';
-import 'package:plasma/domain/entities/phone_number.dart';
-import 'package:plasma/presentation/app/filled_Button.dart';
-import 'package:plasma/presentation/app/input_field.dart';
 import 'package:plasma/presentation/auth/logic/authentication_bloc.dart';
 import 'package:plasma/presentation/auth/logic/otp_form_cubit.dart';
 import 'package:plasma/presentation/auth/logic/phone_form_cubit.dart';
 import 'package:plasma/presentation/auth/logic/timer_bloc.dart';
+import 'package:plasma/presentation/auth/ui/widgets/otp_input.dart';
+import 'package:plasma/presentation/auth/ui/widgets/phone_input.dart';
+import 'package:plasma/presentation/auth/ui/widgets/otp_verify_button.dart';
 import 'package:plasma/presentation/home/ui/home_screen.dart';
 import 'package:plasma/presentation/update_user_data/ui/update_user_info.dart';
 
@@ -36,17 +36,18 @@ class AuthScreen extends StatelessWidget {
         listener: (context, authenticationState) async {
           if (authenticationState is OtpSentState) {
             context.read<TimerBloc>().add(const TimerStarted(duration: 60 * 2));
-          } else {
+          }
+          if (authenticationState is AuthExceptionState ||
+              authenticationState is OtpVerifiedState) {
             context.read<TimerBloc>().add(const TimerReset());
           }
-          if (authenticationState is OtpTimeOutState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Otp code expired"),
-              duration: Duration(seconds: 5),
-            ));
-            // context.read<AuthenticationBloc>().add(AuthInitialEvent());
-          }
           if (authenticationState is AuthExceptionState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(authenticationState.message),
+              duration: const Duration(seconds: 5),
+            ));
+          }
+          if (authenticationState is OtpExceptionState) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(authenticationState.message),
               duration: const Duration(seconds: 5),
@@ -57,7 +58,6 @@ class AuthScreen extends StatelessWidget {
               content: Text("Verified"),
               duration: Duration(seconds: 2),
             ));
-            context.read<TimerBloc>().add(const TimerReset());
             await Future.delayed(const Duration(seconds: 2));
             if (authenticationState.userCredential.user!.displayName != null) {
               Navigator.pushAndRemoveUntil(
@@ -80,156 +80,56 @@ class AuthScreen extends StatelessWidget {
             FocusScope.of(context).requestFocus(FocusScopeNode());
           },
           child: Scaffold(
-            body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-              builder: (context, authenticationState) {
-                return SafeArea(
-                  child: ListView(
-                    padding: const EdgeInsets.all(8.0),
-                    children: [
-                      const SizedBox(
-                        height: 56.0,
-                      ),
-                      SvgPicture.asset(
-                        "assets/icons/auth_otp.svg",
-                        color: Theme.of(context).primaryColor,
-                        height: 150,
-                        width: 150,
-                      ),
-                      const SizedBox(
-                        height: 32.0,
-                      ),
-                      Text(
-                        "Verify your phone",
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text(
-                        "We ${(authenticationState is OtpSentState) ? "have sent" : "will send"} you a 6-digits verification code to this number",
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      BlocBuilder<PhoneFormCubit, PhoneFormState>(
-                        builder: (context, phoneFormState) {
-                          return InputField(
-                            onChanged: (String phone) {
-                              context
-                                  .read<PhoneFormCubit>()
-                                  .valueChanged(PhoneNumber(phone: phone));
-                            },
-                            label: "Phone Number",
-                            textInputType: TextInputType.phone,
-                            errorText: phoneFormState.hasError
-                                ? phoneFormState.errorMessage
-                                : null,
-                            prefixIcon: Icons.call_outlined,
-                            suffix: (phoneFormState.hasError)
-                                ? null
-                                : InkWell(
-                                    onTap: (authenticationState
-                                                is AuthInitialState ||
-                                            authenticationState
-                                                is AuthExceptionState)
-                                        ? () {
-                                            context
-                                                .read<AuthenticationBloc>()
-                                                .add(SendOtpEvent(
-                                                  phoneNumber: phoneFormState
-                                                      .phoneNumber,
-                                                ));
-                                          }
-                                        : null,
-                                    child: BlocBuilder<TimerBloc, TimerState>(
-                                      builder: (context, timerState) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 12.0),
-                                          child: Text(
-                                            (authenticationState
-                                                    is OtpSentState)
-                                                ? timerState.duration.toString()
-                                                : (authenticationState
-                                                        is OtpSendingState)
-                                                    ? "sending..."
-                                                    : "Send SMS",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                    color: (authenticationState
-                                                                is OtpSentState ||
-                                                            authenticationState
-                                                                is OtpSendingState)
-                                                        ? Colors.grey
-                                                        : Theme.of(context)
-                                                            .primaryColor),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                            readOnly: authenticationState is OtpSentState,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      BlocBuilder<OtpFormCubit, OtpFormState>(
-                        builder: (context, otpFormState) {
-                          return Visibility(
-                            visible: authenticationState is OtpSentState,
-                            child: InputField(
-                              onChanged: (String otp) {
-                                context
-                                    .read<OtpFormCubit>()
-                                    .valueChanged(OtpCode(code: otp));
-                              },
-                              prefixIcon: Icons.sms_outlined,
-                              textInputType: TextInputType.number,
-                              errorText: otpFormState.hasError
-                                  ? otpFormState.errorMessage
-                                  : null,
-                              label: "Verification Code",
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      BlocBuilder<OtpFormCubit, OtpFormState>(
-                        builder: (context, otpFormState) {
-                          return MyFilledButton(
-                            child: Text(
-                              (authenticationState is OtpVerifyingState)
-                                  ? "Verifying"
-                                  : "Confirm",
-                            ),
-                            size: const Size(double.infinity, 0),
-                            onTap: (authenticationState is OtpSentState &&
-                                    (!otpFormState.hasError))
-                                ? () {
-                                    context.read<AuthenticationBloc>().add(
-                                          VerifyOtpEvent(
-                                            otpCode: otpFormState.otpCode,
-                                            verificationId: authenticationState
-                                                .verificationId,
-                                          ),
-                                        );
-                                  }
-                                : null,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
+            body: DoubleBackToCloseApp(
+              snackBar:
+                  const SnackBar(content: Text("Press again to exit this App")),
+              child: SafeArea(
+                child: ListView(
+                  padding: const EdgeInsets.all(8.0),
+                  children: [
+                    const SizedBox(
+                      height: 56.0,
+                    ),
+                    SvgPicture.asset(
+                      "assets/icons/auth_otp.svg",
+                      color: Theme.of(context).primaryColor,
+                      height: 150,
+                      width: 150,
+                    ),
+                    const SizedBox(
+                      height: 32.0,
+                    ),
+                    Text(
+                      "Verify your phone",
+                      style: Theme.of(context).textTheme.titleLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                      builder: (context, state) {
+                        return Text(
+                          "We ${(state is OtpSentState) ? "have sent" : "will send"} you a 6-digits verification code to this number",
+                          textAlign: TextAlign.center,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    const PhoneInput(),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    const OtpInput(),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    const OtpVerifyButton(),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

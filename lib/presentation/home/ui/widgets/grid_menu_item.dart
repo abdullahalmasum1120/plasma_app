@@ -44,10 +44,14 @@ class GridMenuItem extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: SvgPicture.asset(
-                    iconSrc,
-                    height: 28,
-                    width: 28,
+                  child: Hero(
+                    transitionOnUserGestures: true,
+                    tag: label,
+                    child: SvgPicture.asset(
+                      iconSrc,
+                      height: 28,
+                      width: 28,
+                    ),
                   ),
                 ),
                 Text(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plasma/core/exceptions/auth_exception.dart';
 import 'package:plasma/domain/entities/phone_number.dart';
 import 'package:plasma/domain/interfaces/i_auth.dart';
 
@@ -32,8 +33,13 @@ class AuthRepo extends IAuth {
   @override
   Future<UserCredential> signIn({
     required AuthCredential authCredential,
-  }) async =>
-      await _firebaseAuth.signInWithCredential(authCredential);
+  }) async {
+    try {
+      return await _firebaseAuth.signInWithCredential(authCredential);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(message: e.code);
+    }
+  }
 
   @override
   Future<void> signOut() async => await FirebaseAuth.instance.signOut();

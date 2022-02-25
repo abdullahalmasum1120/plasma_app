@@ -26,29 +26,24 @@ class OtpVerifiedEvent extends AuthenticationEvent {
 class AuthExceptionEvent extends AuthenticationEvent {
   final String message;
 
-  const AuthExceptionEvent(this.message);
+  const AuthExceptionEvent({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class OtpExceptionEvent extends AuthenticationEvent {
+  final String message;
+
+  const OtpExceptionEvent({required this.message});
 
   @override
   List<Object?> get props => [message];
 }
 
 class OtpSentEvent extends AuthenticationEvent {
-  final String verificationId;
-  final int? forceResendingToken;
-
-  const OtpSentEvent(this.verificationId, this.forceResendingToken);
-
   @override
-  List<Object?> get props => [verificationId, forceResendingToken];
-}
-
-class OtpTimeOutEvent extends AuthenticationEvent {
-  final String verificationId;
-
-  const OtpTimeOutEvent(this.verificationId);
-
-  @override
-  List<Object?> get props => [verificationId];
+  List<Object?> get props => [];
 }
 
 class OtpVerifyingEvent extends AuthenticationEvent {
@@ -68,14 +63,12 @@ class SendOtpEvent extends AuthenticationEvent {
 }
 
 class VerifyOtpEvent extends AuthenticationEvent {
-  final String verificationId;
   final OtpCode otpCode;
 
   const VerifyOtpEvent({
     required this.otpCode,
-    required this.verificationId,
   });
 
   @override
-  List<Object?> get props => [otpCode, verificationId];
+  List<Object?> get props => [otpCode];
 }

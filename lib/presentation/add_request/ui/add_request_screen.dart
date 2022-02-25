@@ -38,10 +38,12 @@ class AddRequestScreen extends StatelessWidget {
             );
           }
           if (state is RequestAddedState) {
-            //TODO: show snackBar():
+            Navigator.pop(context);
+            Navigator.pop(context);
           }
           if (state is RequestExceptionState) {
-            //TODO: show snackBar():
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Scaffold(
@@ -63,10 +65,14 @@ class AddRequestScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      "assets/icons/add_request.svg",
-                      height: 100,
-                      width: 100,
+                    Hero(
+                      tag: "Add Request",
+                      transitionOnUserGestures: true,
+                      child: SvgPicture.asset(
+                        "assets/icons/add_request.svg",
+                        height: 100,
+                        width: 100,
+                      ),
                     ),
                   ],
                 ),
@@ -154,32 +160,33 @@ class AddRequestScreen extends StatelessWidget {
                 ),
                 BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
                   builder: (context, state) {
-                    bool isValidForm = state.noteErrorMessage == null &&
-                        state.bloodGroupErrorMessage == null &&
-                        state.thanaErrorMessage == null &&
-                        state.cityErrorMessage == null &&
-                        state.hospitalErrorMessage == null;
+                    bool hasError = state.hasNoteError &&
+                        state.hasBloodGroupError &&
+                        state.hasThanaError &&
+                        state.hasCityError &&
+                        state.hasHospitalError;
                     return MyFilledButton(
                       child: Text(
                         "Post Request",
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       size: const Size(0, 0),
-                      onTap: () {
-                        if (isValidForm) {
-                          BloodRequest request = BloodRequest(
-                            hospital: state.hospital,
-                            city: state.city,
-                            thana: state.thana,
-                            bloodGroup: state.bloodGroup,
-                            description: state.note,
-                          );
+                      onTap:
+                          (hasError || state == AddRequestFormState.initial())
+                              ? null
+                              : () {
+                                  BloodRequest request = BloodRequest(
+                                    hospital: state.hospital,
+                                    city: state.city,
+                                    thana: state.thana,
+                                    bloodGroup: state.bloodGroup,
+                                    description: state.note,
+                                  );
 
-                          context
-                              .read<AddRequestCubit>()
-                              .addRequest(request: request);
-                        }
-                      },
+                                  context
+                                      .read<AddRequestCubit>()
+                                      .addRequest(request: request);
+                                },
                     );
                   },
                 ),

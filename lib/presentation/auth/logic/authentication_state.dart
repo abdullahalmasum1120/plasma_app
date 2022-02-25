@@ -12,29 +12,10 @@ class AuthInitialState extends AuthenticationState {
 class AuthExceptionState extends AuthenticationState {
   final String message;
 
-  const AuthExceptionState(this.message);
+  const AuthExceptionState({required this.message});
 
   @override
   List<Object> get props => [message];
-}
-
-class OtpSentState extends AuthenticationState {
-  final String verificationId;
-  final int? forceResendingToken;
-
-  const OtpSentState(this.verificationId, this.forceResendingToken);
-
-  @override
-  List<Object> get props => [verificationId, forceResendingToken ?? 0];
-}
-
-class OtpTimeOutState extends AuthenticationState {
-  final String verificationId;
-
-  const OtpTimeOutState(this.verificationId);
-
-  @override
-  List<Object> get props => [verificationId];
 }
 
 class OtpSendingState extends AuthenticationState {
@@ -42,9 +23,23 @@ class OtpSendingState extends AuthenticationState {
   List<Object?> get props => [];
 }
 
+class OtpSentState extends AuthenticationState {
+  @override
+  List<Object> get props => [];
+}
+
 class OtpVerifyingState extends AuthenticationState {
   @override
   List<Object?> get props => [];
+}
+
+class OtpExceptionState extends AuthenticationState {
+  final String message;
+
+  const OtpExceptionState({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }
 
 class OtpVerifiedState extends AuthenticationState {

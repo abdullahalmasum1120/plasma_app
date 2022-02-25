@@ -10,7 +10,11 @@ class Note extends Equatable {
 
   bool get validate {
     if (note.isNotEmpty) {
-      return true;
+      if (RegExp(r'^[A-Z a-z]+$').hasMatch(note)) {
+        return true;
+      } else {
+        throw ValueException(message: "Invalid Note");
+      }
     } else {
       throw ValueException(message: "* Required");
     }

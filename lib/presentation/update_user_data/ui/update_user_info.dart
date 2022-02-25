@@ -15,10 +15,20 @@ import 'package:plasma/presentation/home/ui/home_screen.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_data_cubit.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_form_cubit.dart';
 
-class UpdateUserDataScreen extends StatelessWidget {
+class UpdateUserDataScreen extends StatefulWidget {
   const UpdateUserDataScreen({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<UpdateUserDataScreen> createState() => _UpdateUserDataScreenState();
+}
+
+class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
+  final TextEditingController _nameFieldController = TextEditingController();
+  final TextEditingController _cityFieldController = TextEditingController();
+  final TextEditingController _thanaFieldController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,157 +74,185 @@ class UpdateUserDataScreen extends StatelessWidget {
             onTap: () => FocusScope.of(context).requestFocus(FocusScopeNode()),
             child: Scaffold(
               body: SafeArea(
-                child: ListView(
-                  padding: const EdgeInsets.all(8.0),
-                  children: [
-                    const SizedBox(
-                      height: 56.0,
-                    ),
-                    SvgPicture.asset(
-                      "assets/icons/user_data.svg",
-                      height: 150.0,
-                      width: 150.0,
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Dare ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: Theme.of(context).primaryColor),
-                        ),
-                        Text(
-                          "To ",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          "Donate ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: Theme.of(context).primaryColor),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 40.0,
-                    ),
-                    BlocBuilder<UpdateUserDataFormCubit,
-                        UpdateUserDataFormState>(
-                      builder: (context, state) {
-                        return InputField(
-                          textInputType: TextInputType.text,
-                          prefixIcon: Icons.account_circle_outlined,
-                          label: "Name",
-                          onChanged: (String value) => context
-                              .read<UpdateUserDataFormCubit>()
-                              .usernameChanged(Username(name: value)),
-                          errorText: state.hasUsernameError
-                              ? state.usernameErrorMessage
-                              : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    BlocBuilder<UpdateUserDataFormCubit,
-                        UpdateUserDataFormState>(
-                      builder: (context, state) {
-                        return InputField(
-                          textInputType: TextInputType.text,
-                          prefixIcon: Icons.location_city_outlined,
-                          label: "City",
-                          onChanged: (String value) => context
-                              .read<UpdateUserDataFormCubit>()
-                              .cityChanged(City(city: value)),
-                          errorText: state.hasCityError
-                              ? state.cityErrorMessage
-                              : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    BlocBuilder<UpdateUserDataFormCubit,
-                        UpdateUserDataFormState>(
-                      builder: (context, state) {
-                        return InputField(
-                          textInputType: TextInputType.text,
-                          prefixIcon: Icons.location_on_outlined,
-                          label: "Thana",
-                          onChanged: (String value) => context
-                              .read<UpdateUserDataFormCubit>()
-                              .thanaChanged(Thana(thana: value)),
-                          errorText: state.hasThanaError
-                              ? state.thanaErrorMessage
-                              : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    BlocBuilder<UpdateUserDataFormCubit,
-                        UpdateUserDataFormState>(
-                      builder: (context, state) {
-                        return BloodGroupInputField(
-                          icon: Icons.bloodtype_outlined,
-                          label: "Blood Group",
-                          onChanged: (String? value) => context
-                              .read<UpdateUserDataFormCubit>()
-                              .bloodGroupChanged(
-                                  BloodGroup(group: value ?? "")),
-                          errorText: state.hasBloodGroupError
-                              ? state.bloodGroupErrorMessage
-                              : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 56.0,
-                    ),
-                    BlocBuilder<UpdateUserDataFormCubit,
-                        UpdateUserDataFormState>(
-                      builder: (context, state) {
-                        bool hasError = state.hasUsernameError &&
-                            state.hasCityError &&
-                            state.hasThanaError &&
-                            state.hasBloodGroupError;
-                        return MyFilledButton(
-                          child: const Text(
-                            "Finish",
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.all(8.0),
+                    children: [
+                      const SizedBox(
+                        height: 56.0,
+                      ),
+                      SvgPicture.asset(
+                        "assets/icons/user_data.svg",
+                        height: 150.0,
+                        width: 150.0,
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Dare ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
                           ),
-                          size: const Size(double.infinity, 0),
-                          onTap: () {
-                            if (!hasError) {
-                              MyUser myUser = MyUser(
-                                username: state.username,
-                                bloodGroup: state.bloodGroup,
-                                city: state.city,
-                                phone: FirebaseAuth
-                                    .instance.currentUser!.phoneNumber,
-                                uid: FirebaseAuth.instance.currentUser!.uid,
-                              );
+                          Text(
+                            "To ",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            "Donate ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: Theme.of(context).primaryColor),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 40.0,
+                      ),
+                      BlocBuilder<UpdateUserDataFormCubit,
+                          UpdateUserDataFormState>(
+                        builder: (context, state) {
+                          return InputField(
+                            validator: (value) {
+                              if (state.isValidName) {
+                                return null;
+                              }
+                              return state.usernameErrorMessage;
+                            },
+                            autoValidateMode: AutovalidateMode.always,
+                            controller: _nameFieldController,
+                            textInputType: TextInputType.text,
+                            prefixIcon: Icons.account_circle_outlined,
+                            label: "Name",
+                            onChanged: (String value) => context
+                                .read<UpdateUserDataFormCubit>()
+                                .usernameChanged(Username(name: value.trim())),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      BlocBuilder<UpdateUserDataFormCubit,
+                          UpdateUserDataFormState>(
+                        builder: (context, state) {
+                          return InputField(
+                            validator: (value) {
+                              if (state.isValidCity) {
+                                return null;
+                              }
+                              return state.cityErrorMessage;
+                            },
+                            autoValidateMode: AutovalidateMode.always,
+                            controller: _cityFieldController,
+                            textInputType: TextInputType.text,
+                            prefixIcon: Icons.location_city_outlined,
+                            label: "City",
+                            onChanged: (String value) => context
+                                .read<UpdateUserDataFormCubit>()
+                                .cityChanged(City(city: value.trim())),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      BlocBuilder<UpdateUserDataFormCubit,
+                          UpdateUserDataFormState>(
+                        builder: (context, state) {
+                          return InputField(
+                            validator: (value) {
+                              if (state.isValidThana) {
+                                return null;
+                              }
+                              return state.thanaErrorMessage;
+                            },
+                            autoValidateMode: AutovalidateMode.always,
+                            controller: _thanaFieldController,
+                            textInputType: TextInputType.text,
+                            prefixIcon: Icons.location_on_outlined,
+                            label: "Thana",
+                            onChanged: (String value) => context
+                                .read<UpdateUserDataFormCubit>()
+                                .thanaChanged(Thana(thana: value.trim())),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      BlocBuilder<UpdateUserDataFormCubit,
+                          UpdateUserDataFormState>(
+                        builder: (context, state) {
+                          return BloodGroupInputField(
+                            validator: (value) {
+                              if (state.isValidBloodGroup) {
+                                return null;
+                              }
+                              return state.bloodGroupErrorMessage;
+                            },
+                            autoValidateMode: AutovalidateMode.always,
+                            icon: Icons.bloodtype_outlined,
+                            label: "Blood Group",
+                            onChanged: (String? value) => context
+                                .read<UpdateUserDataFormCubit>()
+                                .bloodGroupChanged(
+                                    BloodGroup(group: value?.trim() ?? "")),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 56.0,
+                      ),
+                      BlocBuilder<UpdateUserDataFormCubit,
+                          UpdateUserDataFormState>(
+                        builder: (context, state) {
+                          bool isValid = state.isValidName &&
+                              state.isValidCity &&
+                              state.isValidThana &&
+                              state.isValidBloodGroup;
+                          return MyFilledButton(
+                            child: const Text(
+                              "Finish",
+                            ),
+                            size: const Size(double.infinity, 0),
+                            onTap: (isValid)
+                                ? () {
+                                    if (_formKey.currentState!.validate()) {
+                                      MyUser myUser = MyUser(
+                                        username: state.username,
+                                        bloodGroup: state.bloodGroup,
+                                        city: state.city,
+                                        thana: state.thana,
+                                        phone: FirebaseAuth
+                                            .instance.currentUser!.phoneNumber,
+                                        uid: FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                      );
 
-                              context
-                                  .read<UpdateUserDataCubit>()
-                                  .createUserData(myUser);
-                            }
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 32.0,
-                    ),
-                  ],
+                                      context
+                                          .read<UpdateUserDataCubit>()
+                                          .createUserData(myUser);
+                                    }
+                                  }
+                                : null,
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 32.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

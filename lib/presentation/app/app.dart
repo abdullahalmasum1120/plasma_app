@@ -34,6 +34,13 @@ class MyApp extends StatelessWidget {
           titleMedium: Constants.defaultTitleStyle,
           titleSmall: Constants.smallTitleStyle,
         ),
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: Colors.white,
+          titleTextStyle: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(color: Theme.of(context).primaryColor),
+        ),
       ),
       home: const AuthScreen(),
     );

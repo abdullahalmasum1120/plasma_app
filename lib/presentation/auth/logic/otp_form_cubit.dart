@@ -13,14 +13,14 @@ class OtpFormCubit extends Cubit<OtpFormState> {
       if (otpCode.validate) {
         emit(state.copyWith(
           otpCode: otpCode,
-          hasError: false,
+          isValid: true,
           errorMessage: null,
         ));
       }
     } on ValueException catch (e) {
       emit(state.copyWith(
         otpCode: otpCode,
-        hasError: true,
+        isValid: false,
         errorMessage: e.message,
       ));
     }
