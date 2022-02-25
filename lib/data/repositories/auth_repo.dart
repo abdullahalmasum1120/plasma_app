@@ -43,4 +43,12 @@ class AuthRepo extends IAuth {
 
   @override
   Future<void> signOut() async => await FirebaseAuth.instance.signOut();
+
+  @override
+  User? get currentUser => _firebaseAuth.currentUser;
+
+  @override
+  Stream<User?> authState() {
+    return _firebaseAuth.authStateChanges();
+  }
 }

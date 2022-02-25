@@ -22,6 +22,7 @@ class OtpVerifyButton extends StatelessWidget {
               size: const Size(double.infinity, 0),
               onTap: (otpFormState.isValid)
                   ? () {
+                      FocusScope.of(context).requestFocus(FocusScopeNode());
                       if (authenticationState is OtpSentState ||
                           authenticationState is OtpExceptionState) {
                         context

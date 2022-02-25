@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plasma/core/constants.dart';
 import 'package:plasma/core/observer.dart';
 import 'package:plasma/presentation/app/app.dart';
+import 'package:plasma/presentation/app/blocs/app_bloc.dart';
+import 'package:plasma/presentation/auth/logic/authentication_bloc.dart';
+import 'package:plasma/presentation/auth/logic/timer_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +36,17 @@ Future<void> main() async {
 
   BlocOverrides.runZoned(
     () {
-      runApp(const MyApp());
+      runApp(MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AppBloc(),
+          ),
+          BlocProvider(
+            create: (context) => TimerBloc(ticker: const Ticker()),
+          ),
+        ],
+        child: const MyApp(),
+      ));
     },
     blocObserver: Observer(),
   );

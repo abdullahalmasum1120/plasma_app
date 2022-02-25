@@ -19,4 +19,8 @@ abstract class IAuth {
   Future<void> signOut();
 
   bool get isSignedIn;
+
+  User? get currentUser;
+
+  Stream<User?> authState();
 }

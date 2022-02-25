@@ -7,11 +7,11 @@ import 'package:plasma/domain/entities/blood_group.dart';
 import 'package:plasma/domain/entities/city.dart';
 import 'package:plasma/domain/entities/thana.dart';
 import 'package:plasma/domain/entities/username.dart';
+import 'package:plasma/presentation/app/blocs/app_bloc.dart';
 import 'package:plasma/presentation/app/blood_group_input_field.dart';
 import 'package:plasma/presentation/app/filled_Button.dart';
 import 'package:plasma/presentation/app/input_field.dart';
 import 'package:plasma/presentation/app/loading_dialog.dart';
-import 'package:plasma/presentation/home/ui/home_screen.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_data_cubit.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_form_cubit.dart';
 
@@ -49,25 +49,19 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(state.message)));
             }
-            if (state is UpdatedUserDataState) {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Created"),
-                duration: Duration(seconds: 2),
-              ));
-              await Future.delayed(const Duration(seconds: 2));
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (route) => false,
-              );
-            }
             if (state is UpdatingUserDataState) {
               showDialog(
                 context: context,
                 builder: (context) => const LoadingDialog(),
                 barrierDismissible: false,
               );
+            }
+            if (state is UpdatedUserDataState) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(const SnackBar(content: Text("Done")));
+              Future.delayed(const Duration(seconds: 2));
+              context.read<AppBloc>().add(AppAuthenticatedEvent());
             }
           },
           child: GestureDetector(

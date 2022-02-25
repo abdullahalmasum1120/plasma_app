@@ -9,8 +9,6 @@ import 'package:plasma/presentation/auth/logic/timer_bloc.dart';
 import 'package:plasma/presentation/auth/ui/widgets/otp_input.dart';
 import 'package:plasma/presentation/auth/ui/widgets/phone_input.dart';
 import 'package:plasma/presentation/auth/ui/widgets/otp_verify_button.dart';
-import 'package:plasma/presentation/home/ui/home_screen.dart';
-import 'package:plasma/presentation/update_user_data/ui/update_user_info.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -27,9 +25,6 @@ class AuthScreen extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => OtpFormCubit(),
-        ),
-        BlocProvider(
-          create: (context) => TimerBloc(ticker: const Ticker()),
         ),
       ],
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -52,27 +47,6 @@ class AuthScreen extends StatelessWidget {
               content: Text(authenticationState.message),
               duration: const Duration(seconds: 5),
             ));
-          }
-          if (authenticationState is OtpVerifiedState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Verified"),
-              duration: Duration(seconds: 2),
-            ));
-            await Future.delayed(const Duration(seconds: 2));
-            if (authenticationState.userCredential.user!.displayName != null) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (route) => false,
-              );
-            } else {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UpdateUserDataScreen()),
-                (route) => false,
-              );
-            }
           }
         },
         child: GestureDetector(

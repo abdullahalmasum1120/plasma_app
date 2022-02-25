@@ -30,6 +30,7 @@ class PhoneInput extends StatelessWidget {
                   ? InkWell(
                       onTap: (authenticationState is AuthInitialState || authenticationState is AuthExceptionState)
                           ? () {
+                        FocusScope.of(context).requestFocus(FocusScopeNode());
                               context
                                   .read<AuthenticationBloc>()
                                   .add(SendOtpEvent(

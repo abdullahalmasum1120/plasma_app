@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plasma/core/constants.dart';
+import 'package:plasma/presentation/app/blocs/app_bloc.dart';
 import 'package:plasma/presentation/auth/ui/auth_screen.dart';
 import 'package:plasma/presentation/home/ui/home_screen.dart';
+import 'package:plasma/presentation/update_user_data/ui/update_user_info.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -42,7 +46,17 @@ class MyApp extends StatelessWidget {
               ?.copyWith(color: Theme.of(context).primaryColor),
         ),
       ),
-      home: const AuthScreen(),
+      home: BlocBuilder<AppBloc, AppState>(
+        builder: (context, state) {
+          if (state is AppAuthenticatedState) {
+            return const HomeScreen();
+          }
+          if (state is AppUserDataUploadState) {
+            return const UpdateUserDataScreen();
+          }
+          return const AuthScreen();
+        },
+      ),
     );
   }
 }
