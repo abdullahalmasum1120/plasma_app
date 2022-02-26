@@ -12,7 +12,7 @@ class PhoneNumber extends Equatable {
 
   bool get validate {
     if (phone.isNotEmpty) {
-      if (RegExp(r'^01[13-9]\d{8}$').hasMatch(phone)) {
+      if (RegExp(r'^\+8801[13-9]\d{8}$').hasMatch(phone)) {
         return true;
       } else {
         throw ValueException(message: "Invalid Phone number");

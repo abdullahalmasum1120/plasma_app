@@ -19,7 +19,7 @@ class PhoneInput extends StatelessWidget {
               onChanged: (String phone) {
                 context
                     .read<PhoneFormCubit>()
-                    .valueChanged(PhoneNumber(phone: phone));
+                    .valueChanged(PhoneNumber(phone: "+88$phone"));
               },
               label: "Phone Number",
               textInputType: TextInputType.phone,
@@ -28,9 +28,11 @@ class PhoneInput extends StatelessWidget {
               prefixIcon: Icons.call_outlined,
               suffix: (phoneFormState.isValid)
                   ? InkWell(
-                      onTap: (authenticationState is AuthInitialState || authenticationState is AuthExceptionState)
+                      onTap: (authenticationState is AuthInitialState ||
+                              authenticationState is AuthExceptionState)
                           ? () {
-                        FocusScope.of(context).requestFocus(FocusScopeNode());
+                              FocusScope.of(context)
+                                  .requestFocus(FocusScopeNode());
                               context
                                   .read<AuthenticationBloc>()
                                   .add(SendOtpEvent(
@@ -43,7 +45,8 @@ class PhoneInput extends StatelessWidget {
                           return Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: Text(
-                              (authenticationState is OtpSentState || authenticationState is OtpExceptionState)
+                              (authenticationState is OtpSentState ||
+                                      authenticationState is OtpExceptionState)
                                   ? timerState.duration.toString()
                                   : (authenticationState is OtpSendingState)
                                       ? "sending..."
@@ -64,7 +67,8 @@ class PhoneInput extends StatelessWidget {
                       ),
                     )
                   : null,
-              readOnly: authenticationState is OtpSentState || authenticationState is OtpExceptionState,
+              readOnly: authenticationState is OtpSentState ||
+                  authenticationState is OtpExceptionState,
             );
           },
         );

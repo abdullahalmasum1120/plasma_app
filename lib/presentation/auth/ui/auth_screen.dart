@@ -26,6 +26,9 @@ class AuthScreen extends StatelessWidget {
         BlocProvider(
           create: (context) => OtpFormCubit(),
         ),
+        BlocProvider(
+          create: (context) => TimerBloc(ticker: const Ticker()),
+        ),
       ],
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, authenticationState) async {

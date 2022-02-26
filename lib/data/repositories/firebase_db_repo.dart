@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:plasma/data/models/blood_request.dart';
 import 'package:plasma/data/models/featured_image.dart';
 import 'package:plasma/data/models/my_user.dart';
+import 'package:plasma/data/models/notification.dart';
 import 'package:plasma/domain/interfaces/i_firestore_db.dart';
 
 class FirebaseDBRepo extends IFirestoreDB {
@@ -38,7 +39,7 @@ class FirebaseDBRepo extends IFirestoreDB {
   Future<MyUser> updateUserData(
       {required String uid,
       required String fieldName,
-      required String data}) async {
+      required Object data}) async {
     await _firebaseFirestore
         .collection(Collections.users)
         .doc(uid)
@@ -216,6 +217,80 @@ class FirebaseDBRepo extends IFirestoreDB {
       return bloodRequests;
     });
   }
+
+  ///users notifications collection operations
+
+  @override
+  Future<Notification> sendNotification(
+      {required Notification notification}) async {
+    await _firebaseFirestore
+        .collection(Collections.users)
+        .doc(notification.receiverUid)
+        .collection(Collections.notifications)
+        .doc(notification.docId)
+        .set(notification.toJson());
+
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await _firebaseFirestore
+        .collection(Collections.users)
+        .doc(notification.receiverUid)
+        .collection(Collections.notifications)
+        .doc(notification.docId)
+        .get();
+
+    return Notification.fromJson(snapshot.data() as Map<String, dynamic>);
+  }
+
+  //
+  // @override
+  // Future<MyUser> getUser({required String uid}) async {
+  //   DocumentSnapshot<Map<String, dynamic>> snapshot =
+  //   await _firebaseFirestore.collection(Collections.users).doc(uid).get();
+  //
+  //   return MyUser.fromJson(snapshot.data() as Map<String, dynamic>);
+  // }
+  //
+  // @override
+  // Future<MyUser> updateUserData(
+  //     {required String uid,
+  //       required String fieldName,
+  //       required Object data}) async {
+  //   await _firebaseFirestore
+  //       .collection(Collections.users)
+  //       .doc(uid)
+  //       .update({fieldName: data});
+  //
+  //   DocumentSnapshot<Map<String, dynamic>> snapshot =
+  //   await _firebaseFirestore.collection(Collections.users).doc(uid).get();
+  //
+  //   return MyUser.fromJson(snapshot.data() as Map<String, dynamic>);
+  // }
+  //
+  // @override
+  // Stream<MyUser> userStream({required String uid}) {
+  //   return _firebaseFirestore
+  //       .collection(Collections.users)
+  //       .doc(uid)
+  //       .snapshots()
+  //       .map((DocumentSnapshot documentSnapshot) =>
+  //       MyUser.fromJson(documentSnapshot.data() as Map<String, dynamic>));
+  // }
+  //
+  // @override
+  // Stream<List<MyUser>> usersStream() {
+  //   return _firebaseFirestore
+  //       .collection(Collections.users)
+  //       .snapshots()
+  //       .map((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+  //     List<MyUser> users = <MyUser>[];
+  //
+  //     for (QueryDocumentSnapshot queryDocumentSnapshot in querySnapshot.docs) {
+  //       users.add(MyUser.fromJson(
+  //           queryDocumentSnapshot.data() as Map<String, dynamic>));
+  //     }
+  //     return users;
+  //   });
+  // }
+
   ///uploading files into fireStorage
   @override
   UploadTask uploadFile({

@@ -5,10 +5,9 @@ class MyUser {
   String? thana;
   String? phone;
   String? uid;
-  String? available;
   String? image;
-  String? requested;
-  String? donated;
+  int? requested;
+  int? donated;
   bool? isAvailable;
 
   MyUser({
@@ -18,7 +17,6 @@ class MyUser {
     this.thana,
     this.phone,
     this.uid,
-    this.available,
     this.image,
     this.requested,
     this.donated,
@@ -32,7 +30,6 @@ class MyUser {
     thana = json['thana'];
     phone = json['phone'];
     uid = json['id'];
-    available = json['available'];
     image = json['image'];
     requested = json['requested'];
     donated = json['donated'];
@@ -47,7 +44,6 @@ class MyUser {
     data['thana'] = thana;
     data['phone'] = phone;
     data['id'] = uid;
-    data['available'] = available;
     data['image'] = image;
     data['requested'] = requested;
     data['donated'] = donated;

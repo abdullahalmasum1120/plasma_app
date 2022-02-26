@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +8,9 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:plasma/core/blocs/upload_bloc.dart';
+import 'package:plasma/data/repositories/auth_repo.dart';
+import 'package:plasma/data/repositories/firebase_db_repo.dart';
 import 'package:plasma/domain/interfaces/i_firestore_db.dart';
-import 'package:plasma/presentation/app/alert_dialog.dart';
 import 'package:plasma/presentation/profile/logic/user_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,9 +28,6 @@ class Profile extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => UserCubit(uid),
-        ),
-        BlocProvider(
-          create: (context) => UploadBloc(),
         ),
       ],
       child: Scaffold(
@@ -79,7 +76,7 @@ class Profile extends StatelessWidget {
                     },
                   ),
                   Visibility(
-                    visible: FirebaseAuth.instance.currentUser!.uid == uid,
+                    visible: AuthRepo().currentUser!.uid == uid,
                     child: Positioned(
                       bottom: 5,
                       right: 5,
@@ -163,6 +160,9 @@ class Profile extends StatelessWidget {
                       Icons.location_on,
                       color: Theme.of(context).primaryColor,
                     ),
+                    const SizedBox(
+                      width: 4.0,
+                    ),
                     Text(
                       "${state.myUser.thana}, ${state.myUser.city}",
                     ),
@@ -174,7 +174,7 @@ class Profile extends StatelessWidget {
               height: 32.0,
             ),
             Visibility(
-              visible: FirebaseAuth.instance.currentUser!.uid != uid,
+              visible: AuthRepo().currentUser!.uid != uid,
               child: BlocBuilder<UserCubit, UserState>(
                 builder: (context, state) {
                   return Row(
@@ -200,9 +200,7 @@ class Profile extends StatelessWidget {
                             SizedBox(
                               width: 8.0,
                             ),
-                            Text(
-                              "Call Now",
-                            ),
+                            Text("Call Now"),
                           ],
                         ),
                       ),
@@ -217,52 +215,14 @@ class Profile extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        onPressed: () async {
-                          // showDialog(
-                          //     barrierDismissible: false,
-                          //     context: context,
-                          //     builder: (context) {
-                          //       return const Loading();
-                          //     });
-                          // String id = const Uuid().v1();
-                          //
-                          // ReceivedRequest receivedRequest = ReceivedRequest(
-                          //   time: DateFormat('kk:mm').format(DateTime.now()),
-                          //   date:
-                          //       DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                          //   uid: FirebaseAuth.instance.currentUser!.uid,
-                          //   status: "unread",
-                          //   docId: id,
-                          // );
-                          // Map<String, dynamic> sentRequest = {
-                          //   "uid": uid,
-                          //   "status": "unread",
-                          //   "docId": id,
-                          // };
-                          // try {
-                          //   uploadRequests(sentRequest,
-                          //       receivedRequest.toJson(), state.myUser, id);
-                          //   Navigator.pop(context);
-                          //   showDialog(
-                          //       barrierDismissible: false,
-                          //       context: context,
-                          //       builder: (context) {
-                          //         return const SuccessfulDialog();
-                          //       });
-                          // } on FirebaseException catch (e) {
-                          //   Navigator.pop(context);
-                          //   Get.snackbar("Warning!", e.code);
-                          // }
-                        },
+                        onPressed: null,
                         child: Row(
                           children: const [
                             Icon(Icons.screen_share_outlined),
                             SizedBox(
                               width: 8.0,
                             ),
-                            Text(
-                              "Request",
-                            ),
+                            Text("Send Message"),
                           ],
                         ),
                       ),
@@ -308,7 +268,7 @@ class Profile extends StatelessWidget {
                         BlocBuilder<UserCubit, UserState>(
                           builder: (context, state) {
                             return Text(
-                              state.myUser.donated.toString(),
+                              (state.myUser.donated ?? 0).toString(),
                             );
                           },
                         ),
@@ -329,7 +289,7 @@ class Profile extends StatelessWidget {
                         BlocBuilder<UserCubit, UserState>(
                           builder: (context, state) {
                             return Text(
-                              state.myUser.requested.toString(),
+                              (state.myUser.requested ?? 0).toString(),
                             );
                           },
                         ),
@@ -375,11 +335,11 @@ class Profile extends StatelessWidget {
                           activeColor: Theme.of(context).primaryColor,
                           value: state.myUser.isAvailable ?? false,
                           onToggle: (isOpen) async {
-                            if (FirebaseAuth.instance.currentUser!.uid == uid) {
-                              await FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(uid)
-                                  .update({"isAvailable": isOpen});
+                            if (AuthRepo().currentUser!.uid == uid) {
+                              FirebaseDBRepo().updateUserData(
+                                  uid: uid,
+                                  fieldName: "isAvailable",
+                                  data: isOpen);
                             }
                           },
                         );
@@ -393,9 +353,7 @@ class Profile extends StatelessWidget {
               height: 8.0,
             ),
             GestureDetector(
-              onTap: () {
-                //TODO: implement to invite to download app
-              },
+              onTap: () {},
               child: Card(
                 elevation: 3,
                 child: Container(
@@ -456,80 +414,14 @@ class Profile extends StatelessWidget {
                 ),
               ),
             ),
-            //TODO: disable signout
             const SizedBox(
-              height: 8.0,
+              height: 32.0,
             ),
-
-            Card(
-              elevation: 3,
-              child: Container(
-                height: 48.0,
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return MyAlertDialog(
-                              content: const Text("Do you want to Sign out?"),
-                              onPositive: () {
-                                FirebaseAuth.instance.signOut();
-                              });
-                        });
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.exit_to_app_outlined,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      const SizedBox(
-                        width: 8.0,
-                      ),
-                      const Expanded(
-                        child: Text("Sign out"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            //TODO: disable signout
           ],
         ),
       ),
     );
   }
-
-  // void uploadRequests(
-  //   Map<String, dynamic> sentRequest,
-  //   Map<String, dynamic> receivedRequest,
-  //   MyUser myUser,
-  //   String id,
-  // ) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(uid)
-  //       .collection("receivedRequests")
-  //       .doc(id)
-  //       .set(receivedRequest);
-  //   await FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .collection("sentRequests")
-  //       .doc(id)
-  //       .set(sentRequest);
-  //
-  //   await FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .update({"requested": myUser.requested! + 1});
-  // }
 
   Future<File?> _selectImageFromGallery() async {
     XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);

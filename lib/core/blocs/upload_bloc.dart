@@ -14,7 +14,7 @@ part 'upload_event.dart';
 part 'upload_state.dart';
 
 class UploadBloc extends Bloc<UploadInitialEvent, UploadState> {
-  late final StreamSubscription _streamSubscription;
+  late StreamSubscription _streamSubscription;
   final FirebaseDBRepo _firebaseDBRepo = FirebaseDBRepo();
 
   UploadBloc() : super(UploadInitialState()) {
@@ -22,7 +22,8 @@ class UploadBloc extends Bloc<UploadInitialEvent, UploadState> {
       UploadTask _uploadTask = _firebaseDBRepo.uploadFile(
         file: event.file,
         reference: event.storageReference,
-      );_streamSubscription = _uploadTask.snapshotEvents.listen((taskSnapshot) {
+      );
+      _streamSubscription = _uploadTask.snapshotEvents.listen((taskSnapshot) {
         double progress =
             (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) * 100;
         AwesomeNotifications().createNotification(

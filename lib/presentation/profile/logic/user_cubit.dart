@@ -11,10 +11,10 @@ class UserCubit extends Cubit<UserState> {
   late StreamSubscription _userStreamSubscription;
   final String uid;
 
-  UserCubit(this.uid) : super(UserState(MyUser())) {
+  UserCubit(this.uid) : super(UserState.initial()) {
     _userStreamSubscription =
         _firebaseDBRepo.userStream(uid: uid).listen((MyUser user) {
-      emit(UserState(user));
+      emit(state.copyWith(myUser: user));
     });
   }
 

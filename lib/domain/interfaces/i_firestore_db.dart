@@ -4,12 +4,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:plasma/data/models/blood_request.dart';
 import 'package:plasma/data/models/featured_image.dart';
 import 'package:plasma/data/models/my_user.dart';
+import 'package:plasma/data/models/notification.dart';
 
 ///all collections of Firestore
 class Collections {
   static const String users = "users";
   static const String bloodRequests = "requests";
   static const String featuresImages = "featuresImages";
+  static const String notifications = "notifications";
 }
 
 abstract class IFirestoreDB {
@@ -21,7 +23,7 @@ abstract class IFirestoreDB {
   Future<MyUser> updateUserData({
     required String uid,
     required String fieldName,
-    required String data,
+    required Object data,
   });
 
   Stream<List<MyUser>> usersStream();
@@ -53,6 +55,10 @@ abstract class IFirestoreDB {
   Stream<List<FeatureImage>> featureImageStream();
 
   Future<bool> deleteFeatureImage({required String id});
+
+  ///users notifications collection operations
+
+  Future<Notification> sendNotification({required Notification notification});
 
   ///uploading files into fireStorage
 
