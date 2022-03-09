@@ -7,7 +7,6 @@ import 'package:plasma/core/constants.dart';
 import 'package:plasma/core/observer.dart';
 import 'package:plasma/presentation/app/app.dart';
 import 'package:plasma/presentation/app/blocs/app_bloc.dart';
-import 'package:plasma/presentation/auth/logic/timer_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

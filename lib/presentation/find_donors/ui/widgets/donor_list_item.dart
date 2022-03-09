@@ -14,13 +14,12 @@ class DonorListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(8.0),
       ),
-      margin: EdgeInsets.zero,
       elevation: 2,
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        height: 100,
+        height: 96,
         width: double.infinity,
         child: Row(
           children: [

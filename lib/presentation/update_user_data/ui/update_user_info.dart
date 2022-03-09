@@ -15,20 +15,10 @@ import 'package:plasma/presentation/app/loading_dialog.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_data_cubit.dart';
 import 'package:plasma/presentation/update_user_data/logic/update_user_form_cubit.dart';
 
-class UpdateUserDataScreen extends StatefulWidget {
-  const UpdateUserDataScreen({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<UpdateUserDataScreen> createState() => _UpdateUserDataScreenState();
-}
-
-class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
-  final TextEditingController _nameFieldController = TextEditingController();
-  final TextEditingController _cityFieldController = TextEditingController();
-  final TextEditingController _thanaFieldController = TextEditingController();
+class UpdateUserDataScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  UpdateUserDataScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +60,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
               body: SafeArea(
                 child: Form(
                   key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
                   child: ListView(
                     padding: const EdgeInsets.all(8.0),
                     children: [
@@ -122,8 +113,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                               }
                               return state.usernameErrorMessage;
                             },
-                            autoValidateMode: AutovalidateMode.always,
-                            controller: _nameFieldController,
+
                             textInputType: TextInputType.text,
                             prefixIcon: Icons.account_circle_outlined,
                             label: "Name",
@@ -146,8 +136,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                               }
                               return state.cityErrorMessage;
                             },
-                            autoValidateMode: AutovalidateMode.always,
-                            controller: _cityFieldController,
+
                             textInputType: TextInputType.text,
                             prefixIcon: Icons.location_city_outlined,
                             label: "City",
@@ -170,8 +159,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                               }
                               return state.thanaErrorMessage;
                             },
-                            autoValidateMode: AutovalidateMode.always,
-                            controller: _thanaFieldController,
+
                             textInputType: TextInputType.text,
                             prefixIcon: Icons.location_on_outlined,
                             label: "Thana",
@@ -194,7 +182,7 @@ class _UpdateUserDataScreenState extends State<UpdateUserDataScreen> {
                               }
                               return state.bloodGroupErrorMessage;
                             },
-                            autoValidateMode: AutovalidateMode.always,
+
                             icon: Icons.bloodtype_outlined,
                             label: "Blood Group",
                             onChanged: (String? value) => context

@@ -24,12 +24,8 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => UserCubit(uid),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => UserCubit(uid),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -48,18 +44,18 @@ class Profile extends StatelessWidget {
                 children: [
                   BlocBuilder<UserCubit, UserState>(
                     builder: (context, state) {
-                      return Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 3.0,
+                      return Hero(
+                        tag: "profile_image",
+                        child: Container(
+                          height: 150,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor,
+                              width: 3.0,
+                            ),
                           ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(75),
                           child: (state.myUser.image != null)
                               ? ClipRRect(
                                   child: Image.network(
@@ -68,8 +64,11 @@ class Profile extends StatelessWidget {
                                   ),
                                   borderRadius: BorderRadius.circular(75),
                                 )
-                              : SvgPicture.asset(
-                                  "assets/icons/profile_avatar.svg",
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(75),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/profile_avatar.svg",
+                                  ),
                                 ),
                         ),
                       );
@@ -103,14 +102,21 @@ class Profile extends StatelessWidget {
                                       .child(
                                           "profileImage.${path.extension(file.path)}");
 
-                                  context.read<UploadBloc>().add(UploadEvent(
-                                      storageReference: reference,
-                                      file: file,
-                                      documentReference: FirebaseFirestore
-                                          .instance
-                                          .collection(Collections.users)
-                                          .doc(uid),
-                                      fieldName: "image"));
+                                  context.read<UploadBloc>().add(
+                                        UploadEvent(
+                                            storageReference: reference,
+                                            file: file,
+                                            onComplete: (url) {
+                                              AuthRepo()
+                                                  .currentUser
+                                                  ?.updatePhotoURL(url);
+                                            },
+                                            documentReference: FirebaseFirestore
+                                                .instance
+                                                .collection(Collections.users)
+                                                .doc(uid),
+                                            fieldName: "image"),
+                                      );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(

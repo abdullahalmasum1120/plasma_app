@@ -17,7 +17,7 @@ class GridMenu extends StatelessWidget {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
-                return const AddRequestScreen();
+                return AddRequestScreen();
               },
             ));
           },
@@ -29,7 +29,7 @@ class GridMenu extends StatelessWidget {
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
-                return const FindDonor();
+                return const FindDonorScreen();
               },
             ));
           },

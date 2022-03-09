@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plasma/core/constants.dart';
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark().copyWith(
         primaryColor: const Color(0xFFFF2156),
-        scaffoldBackgroundColor: const Color(0xFF000000),
+        scaffoldBackgroundColor: Colors.black,
         textTheme: TextTheme(
           bodySmall: Constants.smallTextStyle.copyWith(color: Colors.white),
           bodyMedium: Constants.defaultTextStyle.copyWith(color: Colors.white),
@@ -26,24 +25,29 @@ class MyApp extends StatelessWidget {
               Constants.defaultTitleStyle.copyWith(color: Colors.white),
           titleSmall: Constants.smallTitleStyle.copyWith(color: Colors.white),
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.black,
+          toolbarTextStyle: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       theme: ThemeData.light().copyWith(
         primaryColor: const Color(0xFFFF2156),
         scaffoldBackgroundColor: Colors.white,
         textTheme: TextTheme(
-          bodySmall: Constants.smallTextStyle,
-          bodyMedium: Constants.defaultTextStyle,
-          bodyLarge: Constants.largeTextStyle,
-          titleLarge: Constants.largeTitleStyle,
-          titleMedium: Constants.defaultTitleStyle,
-          titleSmall: Constants.smallTitleStyle,
+          bodySmall: Constants.smallTextStyle.copyWith(color: Colors.black),
+          bodyMedium: Constants.defaultTextStyle.copyWith(color: Colors.black),
+          bodyLarge: Constants.largeTextStyle.copyWith(color: Colors.black),
+          titleLarge: Constants.largeTitleStyle.copyWith(color: Colors.black),
+          titleMedium:
+          Constants.defaultTitleStyle.copyWith(color: Colors.black),
+          titleSmall: Constants.smallTitleStyle.copyWith(color: Colors.black),
         ),
-        appBarTheme: const AppBarTheme().copyWith(
+
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.white,
-          titleTextStyle: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(color: Theme.of(context).primaryColor),
+          titleTextStyle: Theme.of(context).textTheme.titleLarge,
         ),
       ),
       home: BlocBuilder<AppBloc, AppState>(
@@ -52,7 +56,7 @@ class MyApp extends StatelessWidget {
             return const HomeScreen();
           }
           if (state is AppUserDataUploadState) {
-            return const UpdateUserDataScreen();
+            return  UpdateUserDataScreen();
           }
           return const AuthScreen();
         },

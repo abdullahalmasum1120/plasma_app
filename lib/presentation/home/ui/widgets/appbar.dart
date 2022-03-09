@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:plasma/data/repositories/auth_repo.dart';
 import 'package:plasma/presentation/profile/ui/profile.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -9,9 +10,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text(
-        "Dashboard",
-      ),
+      title: const Text("Dashboard"),
       elevation: 0,
       actions: [
         IconButton(
@@ -25,9 +24,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
           icon: Badge(
             badgeColor: Theme.of(context).primaryColor,
-            badgeContent: const Text(
-              "10",
-            ),
+            badgeContent: const Text("10"),
             showBadge: true,
             child: const Icon(
               Icons.notifications_outlined,
@@ -45,26 +42,40 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               MaterialPageRoute(
                 builder: (context) {
                   return Profile(
-                    uid: FirebaseAuth.instance.currentUser!.uid,
+                    uid: AuthRepo().currentUser!.uid,
                   );
                 },
               ),
             );
           },
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: Colors.transparent,
-            child: (FirebaseAuth.instance.currentUser!.photoURL == null)
-                ? const Icon(
-                    Icons.account_circle_outlined,
-                    size: 30,
-                  )
-                : null,
-            backgroundImage:
-                (FirebaseAuth.instance.currentUser!.photoURL != null)
-                    ? NetworkImage(
-                        FirebaseAuth.instance.currentUser!.photoURL.toString())
-                    : null,
+          child: Hero(
+            tag: "profile_image",
+            child: Container(
+              height: 32,
+              width: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              child: (AuthRepo().currentUser?.photoURL != null)
+                  ? CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      backgroundImage: NetworkImage(
+                        AuthRepo().currentUser!.photoURL!,
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: SvgPicture.asset(
+                          "assets/icons/profile_avatar.svg",
+                        ),
+                      ),
+                    ),
+            ),
           ),
         ),
         const SizedBox(

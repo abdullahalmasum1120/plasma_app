@@ -41,9 +41,14 @@ class UploadBloc extends Bloc<UploadInitialEvent, UploadState> {
         );
         add(UploadingEvent(progress));
       });
+
       _uploadTask.whenComplete(() async {
         String url = await event.storageReference.getDownloadURL();
         event.documentReference?.update({event.fieldName!: url});
+        if (event.onComplete != null) {
+          event.onComplete!(url);
+        }
+
         add(UploadedEvent(downloadUrl: url));
       });
 
