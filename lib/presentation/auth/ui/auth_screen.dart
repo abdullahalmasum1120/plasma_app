@@ -2,6 +2,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:plasma/presentation/auth/logic/authentication_bloc.dart';
 import 'package:plasma/presentation/auth/logic/otp_form_cubit.dart';
 import 'package:plasma/presentation/auth/logic/phone_form_cubit.dart';
@@ -68,7 +69,7 @@ class AuthScreen extends StatelessWidget {
                       height: 56.0,
                     ),
                     SvgPicture.asset(
-                      "assets/icons/auth_otp.svg",
+                      Assets.authOtp,
                       color: Theme.of(context).primaryColor,
                       height: 150,
                       width: 150,

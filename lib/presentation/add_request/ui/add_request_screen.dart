@@ -8,6 +8,7 @@ import 'package:plasma/domain/entities/city.dart';
 import 'package:plasma/domain/entities/hospital.dart';
 import 'package:plasma/domain/entities/note.dart';
 import 'package:plasma/domain/entities/thana.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:plasma/presentation/app/blood_group_input_field.dart';
 import 'package:plasma/presentation/app/filled_Button.dart';
 import 'package:plasma/presentation/add_request/logic/add_request_cubit.dart';
@@ -44,7 +45,6 @@ class AddRequestScreen extends StatelessWidget {
           if (state is RequestAddedState) {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
-
           }
           if (state is RequestExceptionState) {
             ScaffoldMessenger.of(context)
@@ -77,7 +77,7 @@ class AddRequestScreen extends StatelessWidget {
                         tag: "Add Request",
                         transitionOnUserGestures: true,
                         child: SvgPicture.asset(
-                          "assets/icons/add_request.svg",
+                          Assets.addRequest,
                           height: 100,
                           width: 100,
                         ),
@@ -204,24 +204,26 @@ class AddRequestScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         size: const Size(0, 0),
-                        onTap:
-                            (hasError || state == AddRequestFormState.initial())
-                                ? null
-                                : () {
-                                    BloodRequest request = BloodRequest(
-                                      hospital: state.hospital,
-                                      city: state.city,
-                                      thana: state.thana,
-                                      bloodGroup: state.bloodGroup,
-                                      description: state.note,
-                                      id: const Uuid().v1(),
-                                      phone: AuthRepo().currentUser?.phoneNumber
-                                    );
+                        onTap: (hasError ||
+                                state == AddRequestFormState.initial())
+                            ? null
+                            : () {
+                                BloodRequest request = BloodRequest(
+                                  hospital: state.hospital,
+                                  city: state.city,
+                                  thana: state.thana,
+                                  bloodGroup: state.bloodGroup,
+                                  description: state.note,
+                                  id: const Uuid().v1(),
+                                  phone: AuthRepo().currentUser?.phoneNumber,
+                                  uid: AuthRepo().currentUser?.uid,
+                                  username: AuthRepo().currentUser?.displayName,
+                                );
 
-                                    context
-                                        .read<AddRequestCubit>()
-                                        .addRequest(request: request);
-                                  },
+                                context
+                                    .read<AddRequestCubit>()
+                                    .addRequest(request: request);
+                              },
                       );
                     },
                   ),

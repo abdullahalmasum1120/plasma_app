@@ -60,6 +60,8 @@ abstract class IFirestoreDB {
 
   Future<Notification> sendNotification({required Notification notification});
 
+  Stream<List<Notification>> notificationsStream();
+
   ///uploading files into fireStorage
 
   UploadTask uploadFile({

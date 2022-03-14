@@ -36,7 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(
               child: ImageSlider(),
             ),
-            const GridMenu(),
+            const SliverPadding(
+              padding: EdgeInsets.all(4.0),
+              sliver: GridMenu(),
+            ),
             SliverAppBar(
               pinned: true,
               floating: true,
@@ -50,10 +53,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     curve: Curves.fastOutSlowIn,
                   );
                 },
-                child: const Text("Donation Requests"),
+                child: BlocBuilder<RequestsBloc, RequestsState>(
+                  builder: (context, state) {
+                    return Text(
+                      "Donation Requests",
+                      style: state is RequestsLoadedState &&
+                              state.requests.isEmpty
+                          ? TextStyle(
+                              color: Theme.of(context).scaffoldBackgroundColor)
+                          : Theme.of(context).textTheme.titleMedium,
+                    );
+                  },
+                ),
               ),
             ),
-            const BloodRequests(),
+            const SliverPadding(
+              padding: EdgeInsets.all(4.0),
+              sliver: BloodRequests(),
+            ),
           ],
         ),
       ),

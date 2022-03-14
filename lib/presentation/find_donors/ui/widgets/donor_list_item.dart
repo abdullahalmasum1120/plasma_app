@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plasma/data/models/my_user.dart';
+import 'package:plasma/presentation/app/assets.dart';
 
 class DonorListItem extends StatelessWidget {
   final MyUser user;
@@ -89,7 +90,7 @@ class DonorListItem extends StatelessWidget {
                       ],
                     ),
                     child: SvgPicture.asset(
-                      "assets/icons/drop_fill.svg",
+                     Assets.dropFill,
                       height: 60,
                       width: 60,
                     ),

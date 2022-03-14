@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plasma/data/models/blood_request.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BloodRequestItem extends StatelessWidget {
@@ -83,7 +84,7 @@ class BloodRequestItem extends StatelessWidget {
                           ],
                         ),
                         child: SvgPicture.asset(
-                          "assets/icons/drop_fill.svg",
+                          Assets.dropFill,
                           height: 60,
                           width: 60,
                           fit: BoxFit.cover,

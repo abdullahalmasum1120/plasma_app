@@ -7,6 +7,7 @@ import 'package:plasma/core/constants.dart';
 import 'package:plasma/core/observer.dart';
 import 'package:plasma/presentation/app/app.dart';
 import 'package:plasma/presentation/app/blocs/app_bloc.dart';
+import 'package:plasma/presentation/notifications/logic/notifications_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,9 @@ Future<void> main() async {
           ),
           BlocProvider(
             create: (context) => UploadBloc(),
+          ),
+          BlocProvider(
+            create: (context) => NotificationsCubit(),
           ),
         ],
         child: const MyApp(),

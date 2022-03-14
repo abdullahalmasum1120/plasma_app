@@ -20,23 +20,26 @@ class ImageSlider extends StatelessWidget {
             ),
             itemCount: state.featureImages.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
-              return Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.4),
-                        offset: const Offset(4, 8),
-                        blurRadius: 8,
-                      ),
-                    ]),
-                height: 240,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    state.featureImages[index].image ?? "",
-                    fit: BoxFit.cover,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          offset: const Offset(2, 4),
+                          blurRadius: 2,
+                        ),
+                      ]),
+                  height: 240,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      state.featureImages[index].image ?? "",
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               );

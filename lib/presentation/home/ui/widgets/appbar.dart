@@ -1,7 +1,11 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plasma/data/repositories/auth_repo.dart';
+import 'package:plasma/presentation/app/assets.dart';
+import 'package:plasma/presentation/notifications/logic/notifications_cubit.dart';
+import 'package:plasma/presentation/notifications/ui/notifications.dart';
 import 'package:plasma/presentation/profile/ui/profile.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,21 +19,35 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => Notifications(),
-            //   ),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Notifications(),
+              ),
+            );
           },
-          icon: Badge(
-            badgeColor: Theme.of(context).primaryColor,
-            badgeContent: const Text("10"),
-            showBadge: true,
-            child: const Icon(
-              Icons.notifications_outlined,
-              size: 30,
-            ),
+          icon: BlocBuilder<NotificationsCubit, NotificationsState>(
+            builder: (context, state) {
+              if (state is NotificationsLoadedState) {
+                return Badge(
+                  position: const BadgePosition(
+                    top: -8.0,
+                    end: -4.0,
+                  ),
+                  badgeColor: Theme.of(context).primaryColor,
+                  badgeContent: Text(
+                    state.notifications.length.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  showBadge: state.notifications.isNotEmpty,
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    size: 30,
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
           ),
         ),
         const SizedBox(
@@ -71,7 +89,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: SvgPicture.asset(
-                          "assets/icons/profile_avatar.svg",
+                          Assets.profileAvatar,
                         ),
                       ),
                     ),

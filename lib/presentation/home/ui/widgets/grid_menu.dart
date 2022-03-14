@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plasma/presentation/add_request/ui/add_request_screen.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:plasma/presentation/find_donors/ui/find_donor.dart';
 import 'package:plasma/presentation/home/ui/widgets/grid_menu_item.dart';
 
@@ -12,7 +13,7 @@ class GridMenu extends StatelessWidget {
       crossAxisCount: 3,
       children: [
         GridMenuItem(
-          iconSrc: "assets/icons/add_request.svg",
+          iconSrc: Assets.addRequest,
           label: "Add Request",
           onTap: () {
             Navigator.push(context, MaterialPageRoute(
@@ -24,7 +25,7 @@ class GridMenu extends StatelessWidget {
           badgeText: "",
         ),
         GridMenuItem(
-          iconSrc: "assets/icons/search_donor.svg",
+          iconSrc: Assets.searchDonor,
           label: "Find Donor",
           onTap: () {
             Navigator.push(context, MaterialPageRoute(

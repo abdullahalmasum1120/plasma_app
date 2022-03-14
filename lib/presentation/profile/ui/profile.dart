@@ -11,6 +11,7 @@ import 'package:plasma/core/blocs/upload_bloc.dart';
 import 'package:plasma/data/repositories/auth_repo.dart';
 import 'package:plasma/data/repositories/firebase_db_repo.dart';
 import 'package:plasma/domain/interfaces/i_firestore_db.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:plasma/presentation/profile/logic/user_cubit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -66,9 +67,8 @@ class Profile extends StatelessWidget {
                                 )
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(75),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/profile_avatar.svg",
-                                  ),
+                                  child:
+                                      SvgPicture.asset(Assets.profileAvatar),
                                 ),
                         ),
                       );

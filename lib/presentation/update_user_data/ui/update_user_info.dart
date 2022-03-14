@@ -7,6 +7,7 @@ import 'package:plasma/domain/entities/blood_group.dart';
 import 'package:plasma/domain/entities/city.dart';
 import 'package:plasma/domain/entities/thana.dart';
 import 'package:plasma/domain/entities/username.dart';
+import 'package:plasma/presentation/app/assets.dart';
 import 'package:plasma/presentation/app/blocs/app_bloc.dart';
 import 'package:plasma/presentation/app/blood_group_input_field.dart';
 import 'package:plasma/presentation/app/filled_Button.dart';
@@ -68,7 +69,7 @@ class UpdateUserDataScreen extends StatelessWidget {
                         height: 56.0,
                       ),
                       SvgPicture.asset(
-                        "assets/icons/user_data.svg",
+                        Assets.userData,
                         height: 150.0,
                         width: 150.0,
                       ),

@@ -6,6 +6,7 @@ import 'package:plasma/data/models/blood_request.dart';
 import 'package:plasma/data/models/featured_image.dart';
 import 'package:plasma/data/models/my_user.dart';
 import 'package:plasma/data/models/notification.dart';
+import 'package:plasma/data/repositories/auth_repo.dart';
 import 'package:plasma/domain/interfaces/i_firestore_db.dart';
 
 class FirebaseDBRepo extends IFirestoreDB {
@@ -91,7 +92,6 @@ class FirebaseDBRepo extends IFirestoreDB {
         .collection(Collections.bloodRequests)
         .doc(bloodRequest.id)
         .get();
-
 
     return BloodRequest.fromJson(snapshot.data() as Map<String, dynamic>);
   }
@@ -276,21 +276,23 @@ class FirebaseDBRepo extends IFirestoreDB {
   //       MyUser.fromJson(documentSnapshot.data() as Map<String, dynamic>));
   // }
   //
-  // @override
-  // Stream<List<MyUser>> usersStream() {
-  //   return _firebaseFirestore
-  //       .collection(Collections.users)
-  //       .snapshots()
-  //       .map((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-  //     List<MyUser> users = <MyUser>[];
-  //
-  //     for (QueryDocumentSnapshot queryDocumentSnapshot in querySnapshot.docs) {
-  //       users.add(MyUser.fromJson(
-  //           queryDocumentSnapshot.data() as Map<String, dynamic>));
-  //     }
-  //     return users;
-  //   });
-  // }
+  @override
+  Stream<List<Notification>> notificationsStream() {
+    return _firebaseFirestore
+        .collection(Collections.users)
+        .doc(AuthRepo().currentUser?.uid)
+        .collection(Collections.notifications)
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      List<Notification> notifications = <Notification>[];
+
+      for (QueryDocumentSnapshot queryDocumentSnapshot in querySnapshot.docs) {
+        notifications.add(Notification.fromJson(
+            queryDocumentSnapshot.data() as Map<String, dynamic>));
+      }
+      return notifications;
+    });
+  }
 
   ///uploading files into fireStorage
   @override
