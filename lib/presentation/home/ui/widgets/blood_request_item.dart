@@ -78,8 +78,8 @@ class BloodRequestItem extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 20,
-                              offset: const Offset(8, 5),
+                              blurRadius: 28,
+                              offset: const Offset(4, 2),
                             ),
                           ],
                         ),
@@ -91,8 +91,8 @@ class BloodRequestItem extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        top: 25,
-                        left: 10,
+                        top: 30,
+                        left: 8,
                         child: Text(
                           request.bloodGroup ?? "",
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),

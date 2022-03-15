@@ -49,8 +49,8 @@ class GridMenuItem extends StatelessWidget {
                     tag: label,
                     child: SvgPicture.asset(
                       iconSrc,
-                      height: 28,
-                      width: 28,
+                      height: 36,
+                      width: 36,
                     ),
                   ),
                 ),

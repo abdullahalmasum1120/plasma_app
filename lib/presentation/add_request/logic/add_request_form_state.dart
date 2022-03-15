@@ -37,11 +37,11 @@ class AddRequestFormState extends Equatable {
 
   factory AddRequestFormState.initial() {
     return const AddRequestFormState._(
-      hasBloodGroupError: false,
-      hasThanaError: false,
-      hasCityError: false,
-      hasHospitalError: false,
-      hasNoteError: false,
+      hasBloodGroupError: true,
+      hasThanaError: true,
+      hasCityError: true,
+      hasHospitalError: true,
+      hasNoteError: true,
       city: "",
       thana: "",
       hospital: "",

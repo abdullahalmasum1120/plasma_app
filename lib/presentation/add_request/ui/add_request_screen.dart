@@ -51,183 +51,188 @@ class AddRequestScreen extends StatelessWidget {
                 .showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        child: Scaffold(
-          body: SafeArea(
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: ListView(
-                padding: const EdgeInsets.all(8.0),
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.cancel),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Hero(
-                        tag: "Add Request",
-                        transitionOnUserGestures: true,
-                        child: SvgPicture.asset(
-                          Assets.addRequest,
-                          height: 100,
-                          width: 100,
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusScopeNode());
+          },
+          child: Scaffold(
+            body: SafeArea(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(8.0),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.cancel),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40.0,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      return InputField(
-                        textInputType: TextInputType.text,
-                        prefixIcon: Icons.local_hospital_outlined,
-                        label: "Hospital Name",
-                        onChanged: (String value) => context
-                            .read<AddRequestFormCubit>()
-                            .hospitalChanged(Hospital(name: value)),
-                        validator: (value) {
-                          if (state.hasHospitalError) {
-                            return state.hospitalErrorMessage;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      return InputField(
-                        textInputType: TextInputType.text,
-                        prefixIcon: Icons.location_city_outlined,
-                        label: "City",
-                        onChanged: (String value) => context
-                            .read<AddRequestFormCubit>()
-                            .cityChanged(City(city: value)),
-                        validator: (value) {
-                          if (state.hasCityError) {
-                            return state.cityErrorMessage;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      return InputField(
-                        textInputType: TextInputType.text,
-                        prefixIcon: Icons.location_on_outlined,
-                        label: "Thana",
-                        onChanged: (String value) => context
-                            .read<AddRequestFormCubit>()
-                            .thanaChanged(Thana(thana: value)),
-                        validator: (value) {
-                          if (state.hasThanaError) {
-                            return state.thanaErrorMessage;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      return BloodGroupInputField(
-                        icon: Icons.bloodtype_outlined,
-                        label: "Blood Group",
-                        onChanged: (String? value) => context
-                            .read<AddRequestFormCubit>()
-                            .bloodGroupChanged(BloodGroup(group: value ?? "")),
-                        validator: (value) {
-                          if (state.hasBloodGroupError) {
-                            return state.bloodGroupErrorMessage;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      return InputField(
-                        textInputType: TextInputType.text,
-                        prefixIcon: Icons.note_add_outlined,
-                        label: "Note (Optional)",
-                        onChanged: (String value) => context
-                            .read<AddRequestFormCubit>()
-                            .noteChanged(Note(note: value)),
-                        validator: (value) {
-                          if (state.hasNoteError) {
-                            return state.noteErrorMessage;
-                          }
-                          return null;
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
-                    builder: (context, state) {
-                      bool hasError = state.hasNoteError &&
-                          state.hasBloodGroupError &&
-                          state.hasThanaError &&
-                          state.hasCityError &&
-                          state.hasHospitalError;
-                      return MyFilledButton(
-                        child: Text(
-                          "Post Request",
-                          style: Theme.of(context).textTheme.titleSmall,
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Hero(
+                          tag: "Add Request",
+                          transitionOnUserGestures: true,
+                          child: SvgPicture.asset(
+                            Assets.addRequest,
+                            height: 100,
+                            width: 100,
+                          ),
                         ),
-                        size: const Size(0, 0),
-                        onTap: (hasError ||
-                                state == AddRequestFormState.initial())
-                            ? null
-                            : () {
-                                BloodRequest request = BloodRequest(
-                                  hospital: state.hospital,
-                                  city: state.city,
-                                  thana: state.thana,
-                                  bloodGroup: state.bloodGroup,
-                                  description: state.note,
-                                  id: const Uuid().v1(),
-                                  phone: AuthRepo().currentUser?.phoneNumber,
-                                  uid: AuthRepo().currentUser?.uid,
-                                  username: AuthRepo().currentUser?.displayName,
-                                );
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return InputField(
+                          autoValidateMode: AutovalidateMode.always,
+                          textInputType: TextInputType.text,
+                          prefixIcon: Icons.local_hospital_outlined,
+                          label: "Hospital Name",
+                          onChanged: (String value) => context
+                              .read<AddRequestFormCubit>()
+                              .hospitalChanged(Hospital(name: value)),
+                          validator: (value) {
+                            if (state.hasHospitalError && value != null) {
+                              return state.hospitalErrorMessage;
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return InputField(
+                          autoValidateMode: AutovalidateMode.always,
+                          textInputType: TextInputType.text,
+                          prefixIcon: Icons.location_city_outlined,
+                          label: "City",
+                          onChanged: (String value) => context
+                              .read<AddRequestFormCubit>()
+                              .cityChanged(City(city: value)),
+                          validator: (value) {
+                            if (state.hasCityError && value != null) {
+                              return state.cityErrorMessage;
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return InputField(
+                          autoValidateMode: AutovalidateMode.always,
+                          textInputType: TextInputType.text,
+                          prefixIcon: Icons.location_on_outlined,
+                          label: "Thana",
+                          onChanged: (String value) => context
+                              .read<AddRequestFormCubit>()
+                              .thanaChanged(Thana(thana: value)),
+                          validator: (value) {
+                            if (state.hasThanaError && value != null) {
+                              return state.thanaErrorMessage;
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return BloodGroupInputField(
+                          autoValidateMode: AutovalidateMode.always,
+                          icon: Icons.bloodtype_outlined,
+                          label: "Blood Group",
+                          onChanged: (String? value) => context
+                              .read<AddRequestFormCubit>()
+                              .bloodGroupChanged(
+                                  BloodGroup(group: value ?? "")),
+                          validator: (value) {
+                            if (state.hasBloodGroupError && value != null) {
+                              return state.bloodGroupErrorMessage;
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return InputField(
+                          autoValidateMode: AutovalidateMode.always,
+                          textInputType: TextInputType.text,
+                          prefixIcon: Icons.note_add_outlined,
+                          label: "Note (Optional)",
+                          onChanged: (String value) => context
+                              .read<AddRequestFormCubit>()
+                              .noteChanged(Note(note: value)),
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    BlocBuilder<AddRequestFormCubit, AddRequestFormState>(
+                      builder: (context, state) {
+                        return MyFilledButton(
+                          child: Text(
+                            "Post Request",
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          size: const Size(0, 0),
+                          onTap: (state.hasHospitalError ||
+                                  state.hasBloodGroupError ||
+                                  state.hasThanaError ||
+                                  state.hasCityError)
+                              ? null
+                              : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    BloodRequest request = BloodRequest(
+                                      hospital: state.hospital,
+                                      city: state.city,
+                                      thana: state.thana,
+                                      bloodGroup: state.bloodGroup,
+                                      description: state.note,
+                                      id: const Uuid().v1(),
+                                      phone:
+                                          AuthRepo().currentUser?.phoneNumber,
+                                      uid: AuthRepo().currentUser?.uid,
+                                      username:
+                                          AuthRepo().currentUser?.displayName,
+                                    );
 
-                                context
-                                    .read<AddRequestCubit>()
-                                    .addRequest(request: request);
-                              },
-                      );
-                    },
-                  ),
-                ],
+                                    context
+                                        .read<AddRequestCubit>()
+                                        .addRequest(request: request);
+                                  }
+                                },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

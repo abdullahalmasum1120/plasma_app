@@ -82,10 +82,9 @@ class DonorListItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          offset: const Offset(5, 10),
+                          offset: const Offset(4, 2),
                           color: Colors.grey.withOpacity(0.2),
-                          blurRadius: 50,
-                          spreadRadius: 10,
+                          blurRadius: 28,
                         ),
                       ],
                     ),
@@ -97,7 +96,7 @@ class DonorListItem extends StatelessWidget {
                   ),
                   Positioned(
                     left: 8,
-                    top: 26,
+                    top: 30,
                     child: Text(
                       user.bloodGroup??"",
                       style: Theme.of(context).textTheme.bodyMedium,
